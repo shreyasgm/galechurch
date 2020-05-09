@@ -1,5 +1,4 @@
 import math
-from itertools import izip
 try:
     import scipy.stats.norm
     norm_logsf = scipy.stats.norm.logsf
@@ -56,7 +55,7 @@ def _align(x, y):
                                length_cost(x[i-di:i], y[j-dj:j]) +
                                bead_cost,
                                di, dj)
-                               for (di, dj), bead_cost in bead_costs.iteritems()
+                               for (di, dj), bead_cost in bead_costs.items()
                                if i-di>=0 and j-dj>=0)
 
     i, j = len(x), len(y)
@@ -76,8 +75,8 @@ def char_length(sentence):
 
 def align(sx, sy):
     """ Align two groups of sentences """
-    cx = map(char_length, sx)
-    cy = map(char_length, sy)
+    cx = list(map(char_length, sx))
+    cy = list(map(char_length, sy))
     for (i1, i2), (j1, j2) in reversed(list(_align(cx, cy))):
         yield ' '.join(sx[i1:i2]), ' '.join(sy[j1:j2])
 
@@ -96,7 +95,7 @@ def read_blocks(f):
 
 def main(corpus_x, corpus_y):
     with open(corpus_x) as fx, open(corpus_y) as fy:
-        for block_x, block_y in izip(read_blocks(fx), read_blocks(fy)):
+        for block_x, block_y in zip(read_blocks(fx), read_blocks(fy)):
             for (sentence_x, sentence_y) in align(block_x, block_y):
                 print('%s ||| %s' % (sentence_x, sentence_y))
 
